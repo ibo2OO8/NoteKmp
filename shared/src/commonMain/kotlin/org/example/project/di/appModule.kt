@@ -1,6 +1,5 @@
 package org.example.project.di
 
-
 import org.example.project.data.local.SettingsDataSource
 import org.example.project.data.local.createSettings
 import org.example.project.data.repository.NoteRepositoryImpl
@@ -47,11 +46,9 @@ val appModule = module {
         MainViewModel(get())
     }
     viewModel {
-        NoteDetailViewModel(get() , get())
+        NoteDetailViewModel(get(), get())
     }
     viewModel {
-        NoteEditViewModel(get(), get() , get())
+        NoteEditViewModel(get(), get(), get())
     }
-
-
 }

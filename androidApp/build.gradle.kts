@@ -15,6 +15,7 @@ dependencies {
     implementation(libs.decompose)
     implementation(libs.extensions1.compose)
     implementation(libs.multiplatform.settings)
+    implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.material3)
 

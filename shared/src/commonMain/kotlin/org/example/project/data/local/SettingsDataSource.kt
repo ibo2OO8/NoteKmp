@@ -6,12 +6,11 @@ import kotlinx.serialization.json.Json
 import org.example.project.domain.entity.Model
 
 private val json = Json { ignoreUnknownKeys = true }
+private const val KEY = "notes"
 
 class SettingsDataSource(
     private val settings: Settings
 ) {
-    private val KEY = "notes"
-
     fun loadNotes(): List<Model> {
         val value = settings.getStringOrNull(KEY)
             ?: return emptyList()

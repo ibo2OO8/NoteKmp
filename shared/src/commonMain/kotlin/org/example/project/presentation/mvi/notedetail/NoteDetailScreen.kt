@@ -18,6 +18,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -59,17 +60,6 @@ fun NoteDetailScreen(
 
             Row {
                 IconButton(onClick = {
-                    component.onEditClick()
-                }) {
-                    Icon(
-                        painter = painterResource(Res.drawable.icon_edit),
-                        contentDescription = "Edit",
-                        tint = Color.Black,
-                        modifier = Modifier.size(25.dp)
-                    )
-                }
-
-                IconButton(onClick = {
                     component.viewModel.onIntent(NoteDetailIntent.DeleteItem(component.noteId))
                     component.onDeleteClick()
                 }) {
@@ -84,16 +74,30 @@ fun NoteDetailScreen(
         }
         Column {
             Text(
+                text = "Заголовок",
+                color = Color.Gray,
+                modifier = Modifier.padding(top = 80.dp, bottom = 10.dp),
+                fontSize = 20.sp,
+                fontStyle = FontStyle.Italic
+            )
+            Text(
                 text = state.title,
                 color = Color.Black,
-                modifier = Modifier.padding(top = 80.dp, bottom = 10.dp),
+                modifier = Modifier.padding(top = 5.dp, bottom = 10.dp),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
             Text(
+                text = "Текст заметки",
+                color = Color.Gray,
+                modifier = Modifier.padding(top = 80.dp, bottom = 10.dp),
+                fontSize = 20.sp,
+                fontStyle = FontStyle.Italic
+            )
+            Text(
                 text = state.description,
                 color = Color.Black,
-                modifier = Modifier.padding(top = 80.dp, bottom = 10.dp),
+                modifier = Modifier.padding(top = 5.dp, bottom = 10.dp),
                 fontSize = 20.sp
             )
         }
