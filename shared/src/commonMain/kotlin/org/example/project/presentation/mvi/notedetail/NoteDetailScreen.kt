@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.arkivanov.mvikotlin.extensions.coroutines.states
 import noteskmp.shared.generated.resources.Res
 import noteskmp.shared.generated.resources.icon_back
 import noteskmp.shared.generated.resources.icon_edit
@@ -36,10 +37,10 @@ import org.koin.compose.viewmodel.koinViewModel
 fun NoteDetailScreen(
     component: NoteDetailComponent,
 ) {
-    val state by component.viewModel.state.collectAsState()
+    val state by component.store.states.collectAsState(NoteDetailState())
 
     LaunchedEffect(component.noteId) {
-        component.viewModel.onIntent(NoteDetailIntent.LoadNote(component.noteId))
+        component.store.accept(NoteDetailIntent.LoadNote(id = component.noteId))
     }
 
     Column(modifier = Modifier.fillMaxSize().padding(18.dp)) {
@@ -60,8 +61,7 @@ fun NoteDetailScreen(
 
             Row {
                 IconButton(onClick = {
-                    component.viewModel.onIntent(NoteDetailIntent.DeleteItem(component.noteId))
-                    component.onDeleteClick()
+                    component.store.accept(NoteDetailIntent.DeleteItem(component.noteId))
                 }) {
                     Icon(
                         painter = painterResource(Res.drawable.icon_trash),

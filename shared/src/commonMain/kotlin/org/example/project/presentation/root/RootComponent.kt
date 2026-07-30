@@ -62,6 +62,7 @@ class DefaultRootComponent(
             handleBackButton = true,
             childFactory = ::createChild
         )
+
     private fun createChild(
         config: Config,
         componentContext: ComponentContext
@@ -75,7 +76,9 @@ class DefaultRootComponent(
                     },
                     toNoteDetailScreen = { id ->
                         navigation.pushNew(Config.NoteDetailScreen(id))
-                    }
+                    },
+                    storeFactory = getKoin().get()
+
                 )
             )
 
@@ -90,8 +93,7 @@ class DefaultRootComponent(
                         toMainScreen = {
                             navigation.pop()
                         },
-                        deleteItemByIdUseCase = getKoin().get(),
-                        getItemByIdUseCase = getKoin().get()
+                        storeFactory = getKoin().get()
                     )
                 )
 
@@ -102,9 +104,7 @@ class DefaultRootComponent(
                     toMainScreen = {
                         navigation.replaceAll(Config.MainScreen)
                     },
-                    getItemByIdUseCase = getKoin().get(),
-                    insertItemUseCase = getKoin().get(),
-                    updateItemUseCase = getKoin().get(),
+                    storeFactory = getKoin().get()
                 )
             )
         }

@@ -9,9 +9,9 @@ import org.example.project.domain.usecase.GetAllItemUseCase
 import org.example.project.domain.usecase.GetItemByIdUseCase
 import org.example.project.domain.usecase.InsertItemUseCase
 import org.example.project.domain.usecase.UpdateItemUseCase
-import org.example.project.presentation.mvi.main.MainViewModel
-import org.example.project.presentation.mvi.notedetail.NoteDetailViewModel
-import org.example.project.presentation.mvi.noteedit.NoteEditViewModel
+import org.example.project.presentation.mvi.main.MainStoreFactory
+import org.example.project.presentation.mvi.notedetail.NoteDetailStoreFactory
+import org.example.project.presentation.mvi.noteedit.NoteEditStoreFactory
 import org.koin.compose.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -42,13 +42,13 @@ val appModule = module {
     single {
         InsertItemUseCase(get())
     }
-    viewModel {
-        MainViewModel(get())
+    factory {
+        MainStoreFactory(storeFactory = get(), get())
     }
-    viewModel {
-        NoteDetailViewModel(get(), get())
+    factory {
+        NoteDetailStoreFactory(get(), get(), get())
     }
-    viewModel {
-        NoteEditViewModel(get(), get(), get())
+    factory {
+        NoteEditStoreFactory(get() , get(), get() , get())
     }
 }

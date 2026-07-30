@@ -6,6 +6,7 @@ fun initKoin() {
     startKoin {
         modules(
             appModule,
+            coreModule
         )
     }
 }
