@@ -1,44 +1,51 @@
 package org.example.project.presentation.mvi.component
 
 import com.arkivanov.decompose.ComponentContext
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import org.example.project.domain.usecase.DeleteItemUseCase
-import org.example.project.domain.usecase.GetItemByIdUseCase
-import org.example.project.presentation.mvi.notedetail.NoteDetailViewModel
+import com.arkivanov.essenty.lifecycle.coroutines.coroutineScope
+import com.arkivanov.mvikotlin.core.instancekeeper.getStore
+import com.arkivanov.mvikotlin.extensions.coroutines.labels
+import com.arkivanov.mvikotlin.core.store.Store
+import com.arkivanov.essenty.lifecycle.coroutines.coroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import org.example.project.presentation.mvi.notedetail.NoteDetailIntent
+import org.example.project.presentation.mvi.notedetail.NoteDetailLabel
+import org.example.project.presentation.mvi.notedetail.NoteDetailState
+import org.example.project.presentation.mvi.notedetail.NoteDetailStoreFactory
 
 interface NoteDetailComponent {
-    val viewModel: NoteDetailViewModel
+    val store: Store<NoteDetailIntent, NoteDetailState, NoteDetailLabel>
     val noteId: Long
     fun onEditClick()
     fun onBackClick()
-    fun onDeleteClick()
 }
 
 class DefaultNoteDetailComponent(
     componentContext: ComponentContext,
+    storeFactory: NoteDetailStoreFactory,
     override val noteId: Long,
     private val toNoteEditScreen: (Long) -> Unit,
     private val toMainScreen: () -> Unit,
-    deleteItemByIdUseCase: DeleteItemUseCase,
-    getItemByIdUseCase: GetItemByIdUseCase,
 ) : NoteDetailComponent, ComponentContext by componentContext {
+    override val store: Store<NoteDetailIntent, NoteDetailState, NoteDetailLabel> =
+        instanceKeeper.getStore { storeFactory.create() }
+    private val scope = coroutineScope()
 
-    override val viewModel: NoteDetailViewModel = NoteDetailViewModel(
-        deleteItemUseCase = deleteItemByIdUseCase,
-        getItemByIdUseCase = getItemByIdUseCase
-    )
+    init {
 
-    override fun onEditClick() {
-        toNoteEditScreen(noteId)
+        store.labels
+            .onEach { label ->
+                when (label) {
+                    NoteDetailLabel.ItemDeleted -> toMainScreen()
+                }
+            }
+            .launchIn(scope)
     }
 
-    override fun onBackClick() {
-        toMainScreen()
-    }
+    override fun onEditClick() = toNoteEditScreen(noteId)
 
-    override fun onDeleteClick() {
-        toMainScreen()
-    }
+
+    override fun onBackClick() = toMainScreen()
+
 }

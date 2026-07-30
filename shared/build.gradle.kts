@@ -48,6 +48,11 @@ kotlin {
             implementation(libs.multiplatform.settings)
         }
         commonMain.dependencies {
+            implementation("com.arkivanov.essenty:lifecycle-coroutines:2.3.0")
+            implementation("com.arkivanov.mvikotlin:mvikotlin:4.2.0")
+            implementation("com.arkivanov.mvikotlin:mvikotlin-main:4.2.0")
+            implementation("com.arkivanov.mvikotlin:mvikotlin-extensions-coroutines:4.2.0")
+
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.datetime)
             implementation(libs.decompose)

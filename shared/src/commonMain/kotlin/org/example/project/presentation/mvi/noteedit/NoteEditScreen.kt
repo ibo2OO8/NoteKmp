@@ -32,6 +32,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.arkivanov.mvikotlin.extensions.coroutines.states
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.example.project.presentation.mvi.component.NoteEditComponent
 import org.example.project.ui.BorderColor
@@ -40,11 +41,9 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun NoteEditScreen(component: NoteEditComponent) {
-    val state by component.viewModel.state.collectAsState()
+    val state by component.store.states.collectAsState(NoteEditState())
     LaunchedEffect(component.noteId) {
-        component.viewModel.onIntent(
-            NoteEditIntent.LoadNote(component.noteId)
-        )
+        component.store.accept(NoteEditIntent.LoadNote(component.noteId))
     }
     var showTitleError by remember { mutableStateOf(false) }
     var showDescriptionError by remember { mutableStateOf(false) }
@@ -94,9 +93,7 @@ fun NoteEditScreen(component: NoteEditComponent) {
             modifier = Modifier.fillMaxWidth(),
             value = state.title,
             onValueChange = {
-                component.viewModel.onIntent(
-                    NoteEditIntent.TitleChanged(it)
-                )
+                component.store.accept(NoteEditIntent.TitleChanged(it))
                 if (it.isNotBlank()) {
                     showTitleError = false
                 }
@@ -133,9 +130,7 @@ fun NoteEditScreen(component: NoteEditComponent) {
                 .height(350.dp),
             value = state.description,
             onValueChange = {
-                component.viewModel.onIntent(
-                    NoteEditIntent.DescriptionChanged(it)
-                )
+                component.store.accept(NoteEditIntent.DescriptionChanged(it))
                 if (it.isNotBlank()) {
                     showDescriptionError = false
                 }
@@ -166,18 +161,15 @@ fun NoteEditScreen(component: NoteEditComponent) {
         Button(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 20.dp)
-                ,
+                .padding(bottom = 20.dp),
             onClick = {
                 showTitleError = state.title.isBlank()
-
                 showDescriptionError = state.description.isBlank()
 
                 if (state.title.isNotBlank() && state.description.isNotBlank()) {
-                    component.onSave()
+                    component.store.accept(NoteEditIntent.Save)
                 }
             }
-
         ) {
             Text(text = "Сохранить", modifier = Modifier.padding(10.dp))
         }

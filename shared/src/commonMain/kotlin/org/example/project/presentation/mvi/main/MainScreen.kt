@@ -32,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import com.arkivanov.mvikotlin.extensions.coroutines.states
 import noteskmp.shared.generated.resources.Res
 import noteskmp.shared.generated.resources.iconSearch
 import noteskmp.shared.generated.resources.icon_edit
@@ -45,13 +46,15 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun MainScreen(
-    component: MainComponent, viewModel: MainViewModel = koinViewModel()
+    component: MainComponent
 ) {
-    var searchText by remember { mutableStateOf("") }
-    val state = viewModel.state.collectAsState()
+    val state by component.store.states.collectAsState(MainState())
     LaunchedEffect(Unit) {
-        viewModel.onIntent(MainIntent.GetAllItem)
+        component.store.accept(MainIntent.GetAllItem)
     }
+
+    var searchText by remember { mutableStateOf("") }
+
     Box(
         modifier = Modifier.fillMaxSize().padding(vertical = 15.dp)
     ) {
@@ -93,7 +96,7 @@ fun MainScreen(
                 modifier = Modifier.fillMaxSize()
             ) {
                 items(
-                    state.value.list.filter {
+                    state.list.filter {
                         it.title.contains(searchText, ignoreCase = true)
                     },
                 ) { note ->
