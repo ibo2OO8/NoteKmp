@@ -49,7 +49,7 @@ kotlin {
         }
         commonMain.dependencies {
             implementation(libs.kotlinx.serialization.json)
-            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.8.0")
+            implementation(libs.kotlinx.datetime)
             implementation(libs.decompose)
             implementation(libs.extensions1.compose)
 
